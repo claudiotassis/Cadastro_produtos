@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Produtos</title>
+    <style>
+        /* logotipo da Oak Tecnologia */
+        .oaktecnologia-logo {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
+        }
+
+        /* logotipo do LinkedIn */
+        .linkedin-logo {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+        }
+
+        /* logotipo do Github */
+        .github-logo {
+            position: fixed;
+            top: 40px;
+            right: 10px;
+            z-index: 1000;
+        }
+
+        /* Estilos para mover os campos de cadastro e listagem para baixo */
+        .conteudo {
+            margin-top: 150px; /* Ajuste essa margem conforme necessário */
+        }
+    </style>
+</head>
+<body>
+    <!-- Logotipo da Oak Tecnologia -->
+    <a href="https://www.oaktecnologia.com/" target="_blank" class="oaktecnologia-logo">
+        <img src="./img/oaktecnologia-logo.png" alt="Oak Tecnologia" width="100" height="100">
+    </a>
+    <!-- Logotipo do LinkedIn -->
+    <a href="https://www.linkedin.com/in/claudio-tassis/" target="_blank" class="linkedin-logo">
+        <img src="./img/linkedin-logo.png" alt="LinkedIn" width="30" height="30">
+    </a>
+    <!-- Logotipo do Github -->
+    <a href="https://github.com/claudiotassis" target="_blank" class="github-logo">
+        <img src="./img/github-logo.png" alt="Github" width="30" height="30">
+    </a>
+
+    <div class="conteudo">
+        <h1>Cadastro de Produtos</h1>
+        
+        <!-- Formulário de Cadastro de Produto -->
+        <form id="produtoForm">
+            <label for="nomeProduto">Nome do Produto:</label>
+            <input type="text" id="nomeProduto" required><br><br>
+
+            <label for="descricaoProduto">Descrição do Produto:</label>
+            <input type="text" id="descricaoProduto" required><br><br>
+
+            <label for="valorProduto">Valor do Produto:</label>
+            <input type="number" id="valorProduto" step="0.01" required><br><br>
+
+            <label for="disponivelProduto">Disponível para Venda:</label>
+            <select id="disponivelProduto">
+                <option value="sim">Sim</option>
+                <option value="nao">Não</option>
+            </select><br><br>
+
+            <input type="submit" value="Cadastrar Produto">
+        </form>
+
+        <!-- Lista de Produtos -->
+        <h2>Lista de Produtos</h2>
+        <table id="listaProdutos">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Valor</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Os produtos cadastrados serão exibidos aqui -->
+            </tbody>
+        </table>
+
+        <!-- Botão para Cadastrar Novo Produto -->
+        <button id="cadastrarNovoProduto">Cadastrar Novo Produto</button>
+    </div>
+
+    <script>
+        const produtoForm = document.getElementById("produtoForm");
+        const listaProdutos = document.getElementById("listaProdutos");
+        const cadastrarNovoProdutoBtn = document.getElementById("cadastrarNovoProduto");
+
+        // Array para armazenar os produtos cadastrados
+        const produtos = [];
+
+        // Função para adicionar um produto à lista
+        function adicionarProduto(nome, valor) {
+            const row = listaProdutos.insertRow();
+            const cellNome = row.insertCell(0);
+            const cellValor = row.insertCell(1);
+
+            cellNome.innerHTML = nome;
+            cellValor.innerHTML = `R$ ${valor.toFixed(2)}`;
+        }
+
+        // Função para atualizar a lista de produtos ordenando por valor
+        function atualizarListaProdutos() {
+            // Ordenar os produtos por valor (menor para maior)
+            produtos.sort((a, b) => a.valor - b.valor);
+
+            // Limpar a tabela de produtos
+            while (listaProdutos.rows.length > 1) {
+                listaProdutos.deleteRow(1);
+            }
+
+            // Adicionar produtos ordenados à lista
+            for (const produto of produtos) {
+                adicionarProduto(produto.nome, produto.valor);
+            }
+        }
+
+        // Evento de envio do formulário de cadastro
+        produtoForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const nome = document.getElementById("nomeProduto").value;
+            const descricao = document.getElementById("descricaoProduto").value;
+            const valor = parseFloat(document.getElementById("valorProduto").value);
+            const disponivel = document.getElementById("disponivelProduto").value;
+
+            // Validar e adicionar o produto à lista
+            if (nome && descricao && !isNaN(valor) && disponivel) {
+                produtos.push({ nome, descricao, valor, disponivel });
+
+                // Limpar o formulário
+                produtoForm.reset();
+
+                // Atualizar a lista de produtos
+                atualizarListaProdutos();
+            } else {
+                alert("Por favor, preencha todos os campos corretamente.");
+            }
+        });
+
+        // Evento de clique no botão "Cadastrar Novo Produto"
+        cadastrarNovoProdutoBtn.addEventListener("click", function () {
+            // Rolar a página para o formulário de cadastro
+            produtoForm.scrollIntoView({ behavior: "smooth" });
+        });
+    </script>
+</body>
+</html>
